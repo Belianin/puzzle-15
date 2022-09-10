@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle 15</title>
+</head>
+<body style="background: yellow">
+    <canvas id="canvas" width="512" height="512" style="border: 1px solid black"></canvas>
+    <script>
+
+        function shuffle(array) {
+
+            const weights = {};
+
+            array.sort((a, b) => {
+
+                if (weights[a] === undefined)
+                    weights[a] = Math.random();
+                if (weights[b] === undefined)
+                    weights[b] = Math.random();
+
+                return weights[a] - weights[b];
+            })
+        }
+
+        function getField(size)
+        {
+            const tilesCount = size * size;
+            const tiles = [...Array(tilesCount).keys()];
+
+            shuffle(tiles);
+
+            const field = [];
+            for (let i = 0; i < size; i++) {
+                field[i] = [];
+            }
+
+            for (let i = 0; i < tilesCount; i++) {
+                field[Math.floor(i / size)][i % size] = tiles[i];
+            }
+            console.log(field);
+
+            return field;
+        }
+
+        const canvasSize = 512;
+        const size = 4;
+        const field = getField(size);
+        const ctx = document.getElementById("canvas").getContext('2d');
+
+        function draw() {
+
+            ctx.fillStyle = "white"
+            ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+            ctx.fillStyle = "black";
+
+            const tileSize = canvasSize / size;
+
+            for (let x = 0; x < size; x++) {
+                for (let y = 0; y < size; y++) {
+                    ctx.fillText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
+                }
+            }
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>
