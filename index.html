@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Puzzle 15</title>
+    <style>
+        .grid {
+            display: grid;
+            place-items:  center;
+        }
+    </style>
 </head>
 <body style="background: yellow">
-    <canvas id="canvas" width="512" height="512" style="border: 1px solid black"></canvas>
+    <div class="grid">
+        <canvas id="canvas" width="512" height="512" style="border: 2px solid black"></canvas>
+    </div>
     <script>
 
         function shuffle(array) {
@@ -48,21 +56,43 @@
         const field = getField(size);
         const ctx = document.getElementById("canvas").getContext('2d');
 
+        const image = new Image();
+        image.src = "https://cs10.pikabu.ru/post_img/big/2018/05/03/10/152536803913230106.jpg";
+
         function draw() {
 
             ctx.fillStyle = "white"
             ctx.fillRect(0, 0, canvasSize, canvasSize);
 
             ctx.fillStyle = "black";
+            ctx.font = "64px Arial";
+            ctx.textBaseline = 'middle'
+            ctx.textAlign = 'center';
+            ctx.lineWidth = 2
 
             const tileSize = canvasSize / size;
 
             for (let x = 0; x < size; x++) {
                 for (let y = 0; y < size; y++) {
-                    ctx.fillText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
+                    if (field[x][y] === 0)
+                        continue;
+
+                    const iX = Math.floor(field[x][y] / size)
+                    const iY = field[x][y] % size;
+
+                    ctx.drawImage(image,
+                        (image.width / size) * iX, (image.height / size) * iY, image.width / size, image.height / size,
+                        tileSize * x, tileSize * y, tileSize, tileSize)
+                    ctx.strokeText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
                 }
             }
         }
+
+        document.addEventListener("keydown", e => {
+            if (e.key === "KeyW") {
+
+            }
+        })
 
         draw();
 
