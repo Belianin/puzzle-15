@@ -95,10 +95,42 @@
             }
         }
 
-        document.addEventListener("keydown", e => {
-            if (e.key === "KeyW") {
-
+        function getEmptyPosition() {
+            for (let x = 0; x < size; x++) {
+                for (let y = 0; y < size; y++) {
+                    if (field[x][y] === 0)
+                        return {x, y}
+                }
             }
+        }
+
+        const isOutOfField = (position) => position < 0 || position >= size;
+
+        function move(dx, dy) {
+            const {x, y} = getEmptyPosition();
+
+            const newX = x + dx;
+            const newY = y + dy;
+
+            if (isOutOfField(newX) || isOutOfField(newY))
+                return;
+
+            const temp = field[newX][newY];
+            field[newX][newY] = 0;
+            field[x][y] = temp;
+        }
+
+        document.addEventListener("keydown", e => {
+            if (e.code === "KeyW") {
+                move(0, 1)
+            } else if (e.code === "KeyS") {
+                move(0, -1)
+            } else if (e.code === "KeyD") {
+                move(-1, 0)
+            } else if (e.code === "KeyA") {
+                move(1, 0)
+            }
+            draw();
         })
 
         document.getElementById("show-numbers-input").addEventListener("change", e => {
