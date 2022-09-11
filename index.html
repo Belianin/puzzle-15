@@ -13,6 +13,9 @@
 <body style="background: yellow">
     <div class="grid">
         <canvas id="canvas" width="512" height="512" style="border: 2px solid black"></canvas>
+        <label>Enable numbers
+            <input id="show-numbers-input" type="checkbox" />
+        </label>
     </div>
     <script>
 
@@ -59,6 +62,8 @@
         const image = new Image();
         image.src = "https://cs10.pikabu.ru/post_img/big/2018/05/03/10/152536803913230106.jpg";
 
+        let showNumbers = false;
+
         function draw() {
 
             ctx.fillStyle = "white"
@@ -83,7 +88,9 @@
                     ctx.drawImage(image,
                         (image.width / size) * iX, (image.height / size) * iY, image.width / size, image.height / size,
                         tileSize * x, tileSize * y, tileSize, tileSize)
-                    ctx.strokeText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
+
+                    if (showNumbers)
+                        ctx.strokeText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
                 }
             }
         }
@@ -92,6 +99,11 @@
             if (e.key === "KeyW") {
 
             }
+        })
+
+        document.getElementById("show-numbers-input").addEventListener("change", e => {
+            showNumbers = e.target.checked;
+            draw();
         })
 
         draw();
