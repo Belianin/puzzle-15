@@ -56,11 +56,22 @@
 
         const canvasSize = 512;
         const size = 4;
+        const emptyTile = size * size - 1;
         const field = getField(size);
         const ctx = document.getElementById("canvas").getContext('2d');
 
-        const image = new Image();
-        image.src = "https://cs10.pikabu.ru/post_img/big/2018/05/03/10/152536803913230106.jpg";
+
+        const image = loadImage("https://cs10.pikabu.ru/post_img/big/2018/05/03/10/152536803913230106.jpg");
+
+        function loadImage(url) {
+
+            const image = new Image();
+
+            image.onload = () => draw();
+            image.src = url;
+
+            return image;
+        }
 
         let showNumbers = false;
 
@@ -79,18 +90,21 @@
 
             for (let x = 0; x < size; x++) {
                 for (let y = 0; y < size; y++) {
-                    if (field[x][y] === 0)
+
+                    const tile = field[x][y];
+
+                    if (tile === emptyTile)
                         continue;
 
-                    const iX = Math.floor(field[x][y] / size)
-                    const iY = field[x][y] % size;
+                    const iX = Math.floor(tile / size)
+                    const iY = tile % size;
 
                     ctx.drawImage(image,
                         (image.width / size) * iX, (image.height / size) * iY, image.width / size, image.height / size,
                         tileSize * x, tileSize * y, tileSize, tileSize)
 
                     if (showNumbers)
-                        ctx.strokeText(field[x][y], x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
+                        ctx.strokeText(tile, x * (tileSize) + tileSize / 2, y * (tileSize) + tileSize / 2);
                 }
             }
         }
@@ -98,7 +112,7 @@
         function getEmptyPosition() {
             for (let x = 0; x < size; x++) {
                 for (let y = 0; y < size; y++) {
-                    if (field[x][y] === 0)
+                    if (field[x][y] === emptyTile)
                         return {x, y}
                 }
             }
@@ -139,6 +153,11 @@
         })
 
         draw();
+        const query = new URLSearchParams(window.location.search);
+
+        const imageQuery = query.get("image");
+        if (imageQuery)
+            image.src = imageQuery;
 
     </script>
 </body>
